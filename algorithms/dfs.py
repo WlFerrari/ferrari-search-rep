@@ -11,41 +11,41 @@ class DFS(BaseSearch):
         self.depth_limit = depth_limit
 
     def search(self, initial: State) -> SearchResult:
-        frontier = [(initial, 0)]
-        best_depth = {initial.tiles: 0}
-        nodes_expanded = 0
-        nodes_generated = 1
-        max_frontier_size = 1
+        pilha = [(initial, 0)]
+        menor_profundidade = {initial.tiles: 0}
+        expandidos = 0
+        gerados = 1
+        maior_fronteira = 1
 
         if not initial.is_solvable:
-            return SearchResult(None, nodes_expanded, nodes_generated, max_frontier_size)
+            return SearchResult(None, expandidos, gerados, maior_fronteira)
 
-        while frontier:
-            current, depth = frontier.pop()
-            if depth > best_depth.get(current.tiles, self.depth_limit + 1):
+        while pilha:
+            atual, profundidade = pilha.pop()
+            if profundidade > menor_profundidade.get(atual.tiles, self.depth_limit + 1):
                 continue
-            if current.is_goal:
+            if atual.is_goal:
                 return SearchResult(
-                    current,
-                    nodes_expanded,
-                    nodes_generated,
-                    max_frontier_size,
-                    depth,
+                    atual,
+                    expandidos,
+                    gerados,
+                    maior_fronteira,
+                    profundidade,
                 )
-            if depth >= self.depth_limit:
+            if profundidade >= self.depth_limit:
                 continue
 
-            nodes_expanded += 1
-            children = current.neighbors()
-            nodes_generated += len(children)
-            for neighbor in reversed(children):
-                next_depth = depth + 1
-                previous_depth = best_depth.get(neighbor.tiles)
-                if previous_depth is not None and previous_depth <= next_depth:
+            expandidos += 1
+            filhos = atual.neighbors()
+            gerados += len(filhos)
+            for vizinho in reversed(filhos):
+                proxima_profundidade = profundidade + 1
+                profundidade_anterior = menor_profundidade.get(vizinho.tiles)
+                if profundidade_anterior is not None and profundidade_anterior <= proxima_profundidade:
                     continue
-                best_depth[neighbor.tiles] = next_depth
-                frontier.append((neighbor, next_depth))
+                menor_profundidade[vizinho.tiles] = proxima_profundidade
+                pilha.append((vizinho, proxima_profundidade))
 
-            max_frontier_size = max(max_frontier_size, len(frontier))
+            maior_fronteira = max(maior_fronteira, len(pilha))
 
-        return SearchResult(None, nodes_expanded, nodes_generated, max_frontier_size)
+        return SearchResult(None, expandidos, gerados, maior_fronteira)

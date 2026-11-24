@@ -7,34 +7,34 @@ from puzzle.result import SearchResult
 class BFS(BaseSearch):
 
     def search(self, initial: State) -> SearchResult:
-        frontier = deque([initial])
-        discovered = {initial.tiles}
-        nodes_expanded = 0
-        nodes_generated = 1
-        max_frontier_size = 1
+        fila = deque([initial])
+        visitados = {initial.tiles}
+        expandidos = 0
+        gerados = 1
+        maior_fronteira = 1
 
         if not initial.is_solvable:
-            return SearchResult(None, nodes_expanded, nodes_generated, max_frontier_size)
+            return SearchResult(None, expandidos, gerados, maior_fronteira)
 
-        while frontier:
-            current = frontier.popleft()
-            if current.is_goal:
+        while fila:
+            atual = fila.popleft()
+            if atual.is_goal:
                 return SearchResult(
-                    current,
-                    nodes_expanded,
-                    nodes_generated,
-                    max_frontier_size,
-                    len(current.path()) - 1,
+                    atual,
+                    expandidos,
+                    gerados,
+                    maior_fronteira,
+                    len(atual.path()) - 1,
                 )
 
-            nodes_expanded += 1
-            for neighbor in current.neighbors():
-                nodes_generated += 1
-                if neighbor.tiles in discovered:
+            expandidos += 1
+            for vizinho in atual.neighbors():
+                gerados += 1
+                if vizinho.tiles in visitados:
                     continue
-                discovered.add(neighbor.tiles)
-                frontier.append(neighbor)
+                visitados.add(vizinho.tiles)
+                fila.append(vizinho)
 
-            max_frontier_size = max(max_frontier_size, len(frontier))
+            maior_fronteira = max(maior_fronteira, len(fila))
 
-        return SearchResult(None, nodes_expanded, nodes_generated, max_frontier_size)
+        return SearchResult(None, expandidos, gerados, maior_fronteira)
