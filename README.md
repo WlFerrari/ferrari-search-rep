@@ -31,3 +31,13 @@
 └── main.py
 ```
 
+## Executar
+
+Requer Python 3.10 ou superior. O projeto usa apenas a biblioteca padrão do Python.
+
+```bash
+python main.py
+```
+
+O exemplo executa BFS, DFS com limite de profundidade 50 e A* com a distância Manhattan. As ações indicam o movimento do espaço vazio.
+
